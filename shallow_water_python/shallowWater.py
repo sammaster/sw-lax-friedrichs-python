@@ -75,10 +75,11 @@ def shallowWater(n,XMAX,TMAX):
     saveToFile(hu,tsum,n,'result.dat','a')
 
 
-def plotVars(x,h,hu,time):
+def plotVars(x,h,hu,time,clear=True):
     time = '{0:.5f}'.format(time)
     pl.figure(1)
-    pl.clf()
+    if clear:
+        pl.clf()
     pl.subplot(211)
     pl.title('water height h(t='+time+')')
     pl.plot(x,h[1:-1],label='u')
@@ -98,7 +99,7 @@ def saveToFile(v,t,n,name,mode):
     v.tofile(ff)
     ff.close()
     
-def readFromFile(name):
+def readFromFile(name,clear=True):
     ff = open(name, 'rb')
     data = np.fromfile(ff)
     ff.close()
@@ -111,11 +112,34 @@ def readFromFile(name):
         data.shape = (numberVariables*numberSavedTimeSteps,(numberCells+numberParameters))
         # plot the last time step
         pl.ion()
-        plotVars((1./2. + np.arange(n))/n, data[-2,numberParameters:], data[-1,numberParameters:], data[-1,0])
+        plotVars((1./2. + np.arange(n))/n, data[-2,numberParameters:], data[-1,numberParameters:], data[-1,0], clear)
     else:
         print 'data file inconsistent'
     return data
 
+def relativeError(name,nameReference):
+    data = readFromFile(name,True)
+    dataRef = readFromFile(nameReference,False)
+    numberParameters = 4 # t, CFL, g, n
+    h = data[-2,numberParameters:]
+    hu = data[-1,numberParameters:]
+    h_ref = dataRef[-2,numberParameters:]
+    hu_ref = dataRef[-1,numberParameters:]
+
+    numberCells = data[0,3]
+    n = numberCells-2 # -2 because of ghost cells
+    time = data[-1,0]
+    timeRef = dataRef[-1,0]
+    if time==timeRef: 
+        relErrorh = np.sum(np.abs(h-h_ref))/np.sum(np.abs(h_ref))
+        absErrorhu = np.sum(np.abs(h-h_ref))/(1.*n)
+        time = '{0:.5f}'.format(time)
+        relErrorh = '{0:.5f}'.format(relErrorh*100.)
+        absErrorhu = '{0:.5f}'.format(absErrorhu*100.)
+        print 'relative error of water height h(t='+time+') is '+relErrorh+'%'
+        print 'absolute error of momentum hu(t='+time+') is '+absErrorhu+'%'
+    else:
+        print 'cannot compare solution at different times'
 
 def initialize(x,XMAX):
     # initialize water height with two peaks
