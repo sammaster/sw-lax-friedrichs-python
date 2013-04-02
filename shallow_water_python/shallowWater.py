@@ -88,8 +88,8 @@ def plotVars(x,h,hu,time):
 def initialize(x,XMAX):
     # initialize water height with two peaks
     c = 0.01
-    h = .5 + .5*np.exp(-(x-.6*XMAX)**2/(2*c**2))
-    h += np.exp(-(x-.4*XMAX)**2/(2*c**2))
+    h = .5 + .5*np.exp(-(2.*(x/XMAX-.6))**2/(2.*c**2))
+    h += np.exp(-(2.*(x/XMAX-.4))**2/(2.*c**2))
     # momentum is zero
     hu = 0.*x
     return h, hu
