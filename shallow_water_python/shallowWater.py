@@ -136,8 +136,8 @@ def relativeError(name,nameReference):
         time = '{0:.5f}'.format(time)
         relErrorh = '{0:.5f}'.format(relErrorh*100.)
         absErrorhu = '{0:.5f}'.format(absErrorhu*100.)
-        print 'relative error of water height h(t='+time+') is '+relErrorh+'%'
-        print 'absolute error of momentum hu(t='+time+') is '+absErrorhu+'%'
+        print 'relative L1-error of water height h(t='+time+') is '+relErrorh+'%'
+        print 'absolute L1-error of momentum hu(t='+time+') is '+absErrorhu+'%'
     else:
         print 'cannot compare solution at different times'
 
