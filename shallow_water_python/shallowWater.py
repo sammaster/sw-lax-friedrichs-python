@@ -39,6 +39,8 @@ def shallowWater(n,XMAX,TMAX):
 
     # time starts at zero
     tsum=0.
+    saveToFile(h,tsum,n,'result.dat','w')
+    saveToFile(hu,tsum,n,'result.dat','a')
     # loop over time
     while tsum<TMAX:
 
@@ -69,6 +71,8 @@ def shallowWater(n,XMAX,TMAX):
         plotVars(x,h,hu,tsum)
 
     #end while (time loop)
+    saveToFile(h,tsum,n,'result.dat','a')
+    saveToFile(hu,tsum,n,'result.dat','a')
 
 
 def plotVars(x,h,hu,time):
@@ -86,6 +90,32 @@ def plotVars(x,h,hu,time):
     pl.xlabel('x')
     pl.legend()
     pl.draw()
+
+def saveToFile(v,t,n,name,mode):
+# mode 'w' (over)writes, 'a' appends
+    v = np.hstack([t,CFL,g,n+2,v]) # +2 because of ghost cells
+    ff = open(name, mode)
+    v.tofile(ff)
+    ff.close()
+    
+def readFromFile(name):
+    ff = open(name, 'rb')
+    data = np.fromfile(ff)
+    ff.close()
+    numberCells = data[3]
+    n = numberCells-2 # -2 because of ghost cells
+    numberParameters = 4 # t, CFL, g, n
+    numberVariables = 2 # h,hu
+    if data.size%(numberCells+numberParameters)*numberVariables==0:
+        numberSavedTimeSteps = data.size/((numberCells+numberParameters)*numberVariables)
+        data.shape = (numberVariables*numberSavedTimeSteps,(numberCells+numberParameters))
+        # plot the last time step
+        pl.ion()
+        plotVars((1./2. + np.arange(n))/n, data[-2,numberParameters:], data[-1,numberParameters:], data[-1,0])
+    else:
+        print 'data file inconsistent'
+    return data
+
 
 def initialize(x,XMAX):
     # initialize water height with two peaks
