@@ -20,6 +20,8 @@ g = 9.80665
 ## shallow water solver 1 dimension
 def shallowWater(n,XMAX,TMAX):
 
+    TMAX *= XMAX
+
     # dx = cell size
     dx = 1.*XMAX/n
     # x = cell center
