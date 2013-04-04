@@ -121,10 +121,10 @@ def error(name,nameReference):
     data = readFromFile(name,True)
     dataRef = readFromFile(nameReference,False)
     numberParameters = 4 # t, CFL, g, n
-    h = data[-2,numberParameters:]
-    hu = data[-1,numberParameters:]
-    h_ref = dataRef[-2,numberParameters:]
-    hu_ref = dataRef[-1,numberParameters:]
+    h = data[-2,numberParameters+1:-1]
+    hu = data[-1,numberParameters+1:-1]
+    h_ref = dataRef[-2,numberParameters+1:-1]
+    hu_ref = dataRef[-1,numberParameters+1:-1]
 
     numberCells = data[0,3]
     if (numberCells != dataRef[0,3]):
