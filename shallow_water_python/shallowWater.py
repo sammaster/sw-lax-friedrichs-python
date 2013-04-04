@@ -117,7 +117,7 @@ def readFromFile(name,clear=True):
         print 'data file inconsistent'
     return data
 
-def relativeError(name,nameReference):
+def error(name,nameReference):
     data = readFromFile(name,True)
     dataRef = readFromFile(nameReference,False)
     numberParameters = 4 # t, CFL, g, n
@@ -127,19 +127,22 @@ def relativeError(name,nameReference):
     hu_ref = dataRef[-1,numberParameters:]
 
     numberCells = data[0,3]
-    n = numberCells-2 # -2 because of ghost cells
-    time = data[-1,0]
-    timeRef = dataRef[-1,0]
-    if time==timeRef: 
-        relErrorh = np.sum(np.abs(h-h_ref))/np.sum(np.abs(h_ref))
-        absErrorhu = np.sum(np.abs(h-h_ref))/(1.*n)
-        time = '{0:.5f}'.format(time)
-        relErrorh = '{0:.5f}'.format(relErrorh*100.)
-        absErrorhu = '{0:.5f}'.format(absErrorhu*100.)
-        print 'relative L1-error of water height h(t='+time+') is '+relErrorh+'%'
-        print 'absolute L1-error of momentum hu(t='+time+') is '+absErrorhu+'%'
-    else:
-        print 'cannot compare solution at different times'
+    if (numberCells != dataRef[0,3]):
+        print 'solution and reference solution have different number of grid cells'
+    else: 
+        n = numberCells-2 # -2 because of ghost cells
+        time = data[-1,0]
+        timeRef = dataRef[-1,0]
+        if time==timeRef: 
+            relErrorh = np.sum(np.abs(h-h_ref))/np.sum(np.abs(h_ref))
+            absErrorhu = np.sum(np.abs(h-h_ref))/(1.*n)
+            time = '{0:.5f}'.format(time)
+            relErrorh = '{0:.5f}'.format(relErrorh*100.)
+            absErrorhu = '{0:.5f}'.format(absErrorhu*100.)
+            print 'relative L1-error of water height h(t='+time+') is '+relErrorh+'%'
+            print 'absolute L1-error of momentum hu(t='+time+') is '+absErrorhu+'%'
+        else:
+            print 'cannot compare solution at different times'
 
 def initialize(x,XMAX):
     # initialize water height with two peaks
