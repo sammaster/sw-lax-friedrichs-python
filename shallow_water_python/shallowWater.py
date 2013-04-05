@@ -95,7 +95,7 @@ def plotVars(x,h,hu,time,clear=True):
 def saveToFile(v,t,n,name,mode):
 # mode 'w' (over)writes, 'a' appends
     v = np.hstack([t,CFL,g,n+2,v]) # +2 because of ghost cells
-    ff = open(name, mode)
+    ff = open(name, mode+'b')
     v.tofile(ff)
     ff.close()
     
