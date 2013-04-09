@@ -13,7 +13,7 @@ import pylab as pl
 ######################################################
 
 # Courant Friedrichs Levy condition (CFL) is a necessary condition for convergence
-CFL = 0.99
+CFL = #???# set so it fulfilles CFL condition, experiment with it
 # gravitational constant
 g = 9.80665
 
@@ -25,7 +25,7 @@ def shallowWater(n,XMAX,TMAX):
     # dx = cell size
     dx = 1.*XMAX/n
     # x = cell center
-    x = dx/2. + np.arange(n)*dx
+    x = #???# set to be cell centers
     # initialize height h and momentum hu
     h, hu = initialize(x,XMAX)
 
@@ -53,7 +53,7 @@ def shallowWater(n,XMAX,TMAX):
         # calculate fluxes at cell interfaces and largest eigenvalue
         fhp, fhup, eigp = fluxes(h[1:],hu[1:])
         fhm, fhum, eigm = fluxes(h[:-1],hu[:-1])
-        maxeig = max(eigp,eigm)
+        maxeig = #???# maximum of eigp and eigm
 
         # calculate time step according to CFL-condition
         dt = calculateDt(dx,maxeig,tsum,TMAX)
@@ -65,9 +65,9 @@ def shallowWater(n,XMAX,TMAX):
         Rh = LxFflux(h,fhp, fhm, lambd)
         Rhu = LxFflux(hu, fhup, fhum, lambd)
 
-        # update inner points
-        h[1:-1] -= lambd*(Rh[1:] - Rh[:-1])
-        hu[1:-1] -= lambd*(Rhu[1:] - Rhu[:-1])
+        
+        h[1:-1] #???# update cell average (tip: depends on Rh and lambda)
+        hu[1:-1] #???# update cell average (tip: depends on Rhu and lambda)
         plotVars(x,h,hu,tsum)
 
     #end while (time loop)
@@ -157,39 +157,24 @@ def addGhostCells(var):
     return np.hstack([0.,var,0.])
 
 def neumannBoundaryConditions(var):
-    ### NEUMANN BC ###
-    var[0]=var[1]
-    var[-1]=var[-2]
-    return var
+    return #???# var with neumann boundary conditions
 
 def periodicBoundaryConditions(var):
-    ### PERIODIC BC ###
-    var[0]=var[-2]
-    var[-1]=var[1]
-    return var
+    return #???# var with periodic boundary conditions
 
 def calculateDt(dx,maxeig,tsum,TMAX):
-    dt = 1.*CFL*dx/maxeig
-    if tsum+dt>TMAX:
-        dt = TMAX-tsum
-    return dt
+    return #???# stepsize dtdt
 
 def fluxes(h,hu):
     fh,fhu,lambd1,lambd2 = fluxAndLambda(h,hu)
-    maxeig = np.max(np.maximum(lambd1,lambd2))
+    maxeig = #???# calculate largest eigenvalue
     return fh, fhu, maxeig
 
 def LxFflux(q, fqm, fqp, lambd):
-    # Lax-Friedrichs Flux
-    return 0.5*( (fqp+fqm) - 1./lambd*(q[1:] - q[:-1]) )
+    return #???# Lax-Friedrichs Flux
 
 def fluxAndLambda(h,hu):
-    c = np.sqrt(g*h)
-    h = np.maximum(0.5,h)
-    u = hu/h
-    fh = hu
-    fhu = fh*u + .5*g*(h**2)
-    return fh, fhu, u-c, u+c
+    return #???# fluxes fh and fhu and eigenvalues lambda1, lambda2
 
 if __name__ == "__main__":
 
