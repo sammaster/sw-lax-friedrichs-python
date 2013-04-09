@@ -176,7 +176,7 @@ def calculateDt(dx,maxeig,tsum,TMAX):
 
 def fluxes(h,hu):
     fh,fhu,lambd1,lambd2 = fluxAndLambda(h,hu)
-    maxeig = np.max(np.maximum(lambd1,lambd2))
+    maxeig = np.max(np.maximum(np.abs(lambd1),np.abs(lambd2)))
     return fh, fhu, maxeig
 
 def LxFflux(q, fqm, fqp, lambd):
