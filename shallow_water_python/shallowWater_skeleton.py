@@ -138,9 +138,9 @@ def error(name,nameReference):
             absErrorhu = np.sum(np.abs(h-h_ref))/(1.*n)
             time = '{0:.5f}'.format(time)
             relErrorh = '{0:.5f}'.format(relErrorh*100.)
-            absErrorhu = '{0:.5f}'.format(absErrorhu*100.)
+            absErrorhu = '{0:.5f}'.format(absErrorhu)
             print 'relative L1-error of water height h(t='+time+') is '+relErrorh+'%'
-            print 'absolute L1-error of momentum hu(t='+time+') is '+absErrorhu+'%'
+            print 'absolute L1-error of momentum hu(t='+time+') is '+absErrorhu
         else:
             print 'cannot compare solution at different times'
 
